@@ -1,0 +1,8 @@
+generatorName: go-gin-server
+templateDir: /local/scripts/templates
+outputDir: /local
+inputSpec: /local/api/stomatology-al.openapi.yaml
+enablePostProcessFile: true
+additionalProperties:
+  apiPath: internal/stomatology_al
+  packageName: stomatology_al

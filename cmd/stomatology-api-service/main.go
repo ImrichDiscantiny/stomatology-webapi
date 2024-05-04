@@ -1,11 +1,13 @@
 package main
 
 import (
-    "log"
-    "os"
-    "strings"
-    "github.com/gin-gonic/gin"
-    "github.com/ImrichDiscantiny/stomatology-webapi/api"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/ImrichDiscantiny/stomatology-webapi/api"
+	"github.com/ImrichDiscantiny/stomatology-webapi/internal/stomatology_al"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -21,6 +23,7 @@ func main() {
     engine := gin.New()
     engine.Use(gin.Recovery())
     // request routings
+	stomatology_al.AddRoutes(engine)
     engine.GET("/openapi", api.HandleOpenApi)
     engine.Run(":" + port)
 }

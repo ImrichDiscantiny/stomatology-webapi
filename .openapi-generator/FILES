@@ -1,0 +1,5 @@
+internal/stomatology_al/README.md
+internal/stomatology_al/api_stomatology_appointment_list.go
+internal/stomatology_al/model_appointment_description.go
+internal/stomatology_al/model_appointment_list_entry.go
+internal/stomatology_al/routers.go

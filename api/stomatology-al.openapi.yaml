@@ -20,7 +20,7 @@ paths:
       tags:
         - stomatologyAppointmentList
       summary: Provides appointments list
-      operationId: getWaitingListEntries
+      operationId: getAppointmentListEntries
       description: By using appointmentsId you get list of entries in stomatology appointments list
       parameters:
         - in: path
