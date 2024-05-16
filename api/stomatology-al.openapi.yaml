@@ -4,18 +4,20 @@ servers:
     url: /api
 info:
   description: Stomatology Appointment List management for Web-In-Cloud system
-  version: '1.0.0'
+  version: "1.0.0"
   title: Appointment List Api
   contact:
     email: xdiscantiny@stuba.sk
   license:
     name: CC BY 4.0
-    url: 'https://creativecommons.org/licenses/by/4.0/'
+    url: "https://creativecommons.org/licenses/by/4.0/"
 tags:
   - name: stomatologyAppointmentList
     description: Stomatology Appoinment management List API
+  - name: stomatology
+    description: Stomatology details
 paths:
-  '/appointment-list/{appointmentsDate}/entries':
+  "/appointment-list/{appointmentsDate}/entries":
     get:
       tags:
         - stomatologyAppointmentList
@@ -33,18 +35,18 @@ paths:
             description: The date of the appointments in yyyy-mm-dd format
           required: true
       responses:
-        '200':
+        "200":
           description: value of the appointments entries
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AppointmentListEntry'
+                  $ref: "#/components/schemas/AppointmentListEntry"
               examples:
                 response:
-                  $ref: '#/components/examples/AppointmentListExamples'
-        '404':
+                  $ref: "#/components/examples/AppointmentListExamples"
+        "404":
           description: Appointments error
     post:
       tags:
@@ -55,7 +57,7 @@ paths:
       parameters:
         - in: path
           name: appointmentsDate
-          description: pass the id of the particular ambulance
+          description: pass the date of the particular appointment
           required: true
           schema:
             type: string
@@ -65,26 +67,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AppointmentListEntry'
+              $ref: "#/components/schemas/AppointmentListEntry"
             examples:
               request-sample:
-                $ref: '#/components/examples/AppointmentListExample'
+                $ref: "#/components/examples/AppointmentListExample"
         description: Appointment list entry to store
         required: true
       responses:
-        '200':
+        "200":
           description: >-
             Value of the appointment list entry
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentListEntry'
+                $ref: "#/components/schemas/AppointmentListEntry"
               examples:
                 updated-response:
-                  $ref: '#/components/examples/AppointmentListExample'
-        '404':
+                  $ref: "#/components/examples/AppointmentListExample"
+        "404":
           description: Cannot add new appointments to selected old date.
-  '/appointment-list/{appointmentsDate}/entries/{id}':
+  "/appointment-list/{appointmentsDate}/entries/{id}":
     put:
       tags:
         - stomatologyAppointmentList
@@ -94,7 +96,7 @@ paths:
       parameters:
         - in: path
           name: appointmentsDate
-          description: pass the id of the particular ambulance
+          description: pass the date to specific date
           required: true
           schema:
             type: string
@@ -110,24 +112,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AppointmentListEntry'
+              $ref: "#/components/schemas/AppointmentListEntry"
             examples:
               request:
-                $ref: '#/components/examples/AppointmentListExample'
+                $ref: "#/components/examples/AppointmentListExample"
         description: Appointment list entry to update
         required: true
       responses:
-        '200':
+        "200":
           description: >-
             value of the appoinment list entry with updated values
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppointmentListEntry'
+                $ref: "#/components/schemas/AppointmentListEntry"
               examples:
                 response:
-                  $ref: '#/components/examples/AppointmentListExample'
-        '404':
+                  $ref: "#/components/examples/AppointmentListExample"
+        "404":
           description: Cannopt update appointment date older than today
     delete:
       tags:
@@ -138,7 +140,7 @@ paths:
       parameters:
         - in: path
           name: appointmentsDate
-          description: pass the id of the particular ambulance
+          description: pass the date of the particular date
           required: true
           schema:
             type: string
@@ -151,118 +153,264 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Item deleted
-        '404':
+        "404":
           description: Cannopt delete appointment date older than today
+  "/stomatology":
+    post:
+      tags:
+        - stomatology
+      summary: Saves new stomatology definition
+      operationId: createStomatology
+      description: Use this method to initialize new stomatology in the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Stomatology"
+            examples:
+              request-sample:
+                $ref: "#/components/examples/StomatologyExample"
+        description: Stomatology details to store
+        required: true
+      responses:
+        "200":
+          description: >-
+            Value of stored stomatology
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stomatology"
+              examples:
+                updated-response:
+                  $ref: "#/components/examples/StomatologyExample"
+        "400":
+          description: Missing mandatory properties of input object.
+        "409":
+          description: Entry with the specified id already exists
+  "/stomatology/{stomatologyId}":
+    delete:
+      tags:
+        - stomatology
+      summary: Deletes specific stomatology
+      operationId: deleteStomatology
+      description: Use this method to delete the specific stomatology from the system.
+      parameters:
+        - in: path
+          name: stomatologyId
+          description: pass the id of the particular stomatology
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Item deleted
+        "404":
+          description: Stomatology with such ID does not exist
 components:
   schemas:
     AppointmentListEntry:
       type: object
-      required: [id, date, patient, fullname, duration, dayShortcut, description]
+      required:
+        [id, date, patient, fullname, duration, dayShortcut, description]
       properties:
         id:
           type: string
-          example: '0'
+          example: "0"
           description: Unique identifier for the appointment
         date:
           type: string
           pattern: '^\d{4}-\d{2}-\d{2}$'
-          example: '2024-04-23'
+          example: "2024-06-23"
           description: Date and time of the appointment
         patient:
           type: string
-          example: 'Marrtin G.'
+          example: "Marrtin G."
           description: Name of the patient
         fullname:
           type: string
-          example: 'Martin Groma'
+          example: "Martin Groma"
           description: Full name of the patient
         duration:
           type: string
-          example: '7:00'
+          example: "7:00"
           description: Duration of the appointment in HH:mm format
         dayShortcut:
           type: string
-          example: 'Po'
+          example: "Po"
           description: Shortcut for the day of the appointment
         description:
-          $ref: '#/components/schemas/AppointmentDescription'
+          $ref: "#/components/schemas/AppointmentDescription"
       example:
-        $ref: '#/components/examples/AppointmentListExample'
+        $ref: "#/components/examples/AppointmentListExample"
     AppointmentDescription:
       type: object
       required: [reasonForAppointment, teeths]
       properties:
         reasonForAppointment:
           type: string
-          example: 'Pravidelná kontrola'
+          example: "Pravidelná kontrola"
           description: Reason for the appointment
         teeths:
           type: array
           items:
             type: string
           description: List of teeths related to the appointment
+      example:
+        $ref: "#/components/examples/AppointmentDescriptionExample"
+    Stomatology:
+      type: object
+      required: ["id", "name"]
+      properties:
+        id:
+          type: string
+          example: dentist-warenova
+          description: Unique identifier of the stomatology
+        name:
+          type: string
+          example: Zubná ambulancia Dr. Warenová
+          description: Human readable display name of the stomatologz
+        appointmentList:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentListEntry"
+        descriptionAppointment:
+          type: array
+          items:
+            $ref: "#/components/schemas/AppointmentDescription"
+      example:
+        $ref: "#/components/examples/StomatologyExample"
   examples:
     AppointmentListExamples:
       summary: Examples of appointments
       description: An example of multiple appointment objects
       value:
-        - id: '0'
-          date: '2024-04-29'
-          patient: 'Marrtin G.'
-          fullname: 'Marrtin G.'
-          duration: '7:00'
-          dayShortcut: 'Po'
+        - id: "0"
+          date: "2024-06-29"
+          patient: "Marrtin G."
+          fullname: "Marrtin G."
+          duration: "7:00"
+          dayShortcut: "Po"
           description:
-            reasonForAppointment: 'Pravidelná kontrola'
+            reasonForAppointment: "Pravidelná kontrola"
             teeths: []
-        - id: '1'
-          date: '2024-04-29'
-          patient: 'Adam R.'
-          fullname: 'Adam R.'
-          duration: '8:00'
-          dayShortcut: 'Po'
+        - id: "1"
+          date: "2024-06-29"
+          patient: "Adam R."
+          fullname: "Adam R."
+          duration: "8:00"
+          dayShortcut: "Po"
           description:
-            reasonForAppointment: 'Bolesť zubov'
+            reasonForAppointment: "Bolesť zubov"
             teeths: []
-        - id: '2'
-          date: '2024-04-23'
-          patient: 'Rudolf S.'
-          fullname: 'Rudolf S.'
-          duration: '12:00'
-          dayShortcut: 'St'
+        - id: "2"
+          date: "2024-06-23"
+          patient: "Rudolf S."
+          fullname: "Rudolf S."
+          duration: "12:00"
+          dayShortcut: "St"
           description:
-            reasonForAppointment: 'Čistenie zubov'
+            reasonForAppointment: "Čistenie zubov"
             teeths: []
-        - id: '3'
-          date: '2024-04-23'
-          patient: 'Ján N.'
-          fullname: 'Ján N.'
-          duration: '9:00'
-          dayShortcut: 'Po'
+        - id: "3"
+          date: "2024-06-23"
+          patient: "Ján N."
+          fullname: "Ján N."
+          duration: "9:00"
+          dayShortcut: "Po"
           description:
-            reasonForAppointment: 'Krvácanie ďasien'
+            reasonForAppointment: "Krvácanie ďasien"
             teeths: []
-        - id: '4'
-          date: '2024-04-23'
-          patient: 'Branislav P.'
-          fullname: 'Branislav P.'
-          duration: '14:00'
-          dayShortcut: 'Pia'
+        - id: "4"
+          date: "2024-06-23"
+          patient: "Branislav P."
+          fullname: "Branislav P."
+          duration: "14:00"
+          dayShortcut: "Pia"
           description:
-            reasonForAppointment: 'Zlomený zub'
+            reasonForAppointment: "Zlomený zub"
             teeths: []
     AppointmentListExample:
       summary: Example of an appointment - Branislav P.
       description: An example of an appointment object for Branislav P.
       value:
-        id: '4'
-        date: '2024-04-23'
-        patient: 'Branislav P.'
-        fullname: 'Branislav P.'
-        duration: '14:00'
-        dayShortcut: 'Pia'
+        id: "4"
+        date: "2024-04-23"
+        patient: "Branislav P."
+        fullname: "Branislav P."
+        duration: "14:00"
+        dayShortcut: "Pia"
         description:
-          reasonForAppointment: 'Zlomený zub'
+          reasonForAppointment: "Zlomený zub"
           teeths: []
+    AppointmentDescriptionExample:
+      summary: Example of description of appointment.
+      description: An example of an description of object for appointment of Branislav P.
+      value:
+        reasonForAppointment: "Zlomený zub"
+        teeths: []
+    StomatologyExample:
+      summary: Sample GP stomatologz
+      description: |
+        Example of GP stomatology with appointment list and predefined descriptions
+      value:
+        id: gp-warenova
+        name: Ambulancia všeobecného lekárstva Dr. Warenová
+        AppointmentList:
+          - id: "0"
+            date: "2024-06-29"
+            patient: "Marrtin G."
+            fullname: "Marrtin G."
+            duration: "7:00"
+            dayShortcut: "Po"
+            description:
+              reasonForAppointment: "Pravidelná kontrola"
+              teeths: []
+          - id: "1"
+            date: "2024-06-29"
+            patient: "Adam R."
+            fullname: "Adam R."
+            duration: "8:00"
+            dayShortcut: "Po"
+            description:
+              reasonForAppointment: "Bolesť zubov"
+              teeths: []
+          - id: "2"
+            date: "2024-06-23"
+            patient: "Rudolf S."
+            fullname: "Rudolf S."
+            duration: "12:00"
+            dayShortcut: "St"
+            description:
+              reasonForAppointment: "Čistenie zubov"
+              teeths: []
+          - id: "3"
+            date: "2024-06-23"
+            patient: "Ján N."
+            fullname: "Ján N."
+            duration: "9:00"
+            dayShortcut: "Po"
+            description:
+              reasonForAppointment: "Krvácanie ďasien"
+              teeths: []
+          - id: "4"
+            date: "2024-06-23"
+            patient: "Branislav P."
+            fullname: "Branislav P."
+            duration: "14:00"
+            dayShortcut: "Pia"
+            description:
+              reasonForAppointment: "Zlomený zub"
+              teeths: []
+        descriptionAppointment:
+          - reasonForAppointment: "Pravidelná kontrola"
+            teeths: []
+          - reasonForAppointment: "Bolesť zubov"
+            teeths: []
+          - reasonForAppointment: "Čistenie zubov"
+            teeths: []
+          - reasonForAppointment: "Krvácanie ďasien"
+            teeths: []
+          - reasonForAppointment: "Zlomený zub"
+            teeths: []

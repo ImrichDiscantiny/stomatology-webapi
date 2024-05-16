@@ -18,6 +18,11 @@ func AddRoutes(engine *gin.Engine) {
   group := engine.Group("/api")
   
   {
+    api := newStomatologyAPI()
+    api.addRoutes(group)
+  }
+  
+  {
     api := newStomatologyAppointmentListAPI()
     api.addRoutes(group)
   }
