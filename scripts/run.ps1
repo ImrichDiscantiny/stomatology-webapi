@@ -29,6 +29,9 @@ switch ($command) {
             mongo down
         }
     }
+    "docker" {
+        docker build -t imrdsc/stomatology-al-webapi:local-build -f ${ProjectRoot}/build/docker/Dockerfile .
+    }
     "mongo" {
         mongo up
         }
