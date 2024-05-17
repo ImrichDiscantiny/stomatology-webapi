@@ -37,8 +37,8 @@ func updateStomatologyFunc(ctx *gin.Context, updater stomatologyUpdater) {
         return
     }
 
-    stomatologyId := ctx.Param("stomatologyId")
-
+    //stomatologyId := ctx.Param("stomatologyId")
+    stomatologyId := "oleksakova"
     stomatology, err := db.FindDocument(ctx, stomatologyId)
 
     switch err {
