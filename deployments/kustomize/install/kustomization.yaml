@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- deployment.yaml
+- service.yaml
+
+configMapGenerator:
+  - name: id-stomatology-webapi-mongodb-init
+    files:
+      - params/init-db.js
+  - name: id-stomatology-webapi-config
+    literals:
+      - database=id-stomatology
+      - collection=stomatology
+patches:
+ - path: patches/webapi.deployment.yaml
+   target:
+     group: apps
+     version: v1
+     kind: Deployment
+     name: id-stomatology-webapi

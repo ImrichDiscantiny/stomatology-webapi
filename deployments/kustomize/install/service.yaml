@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: id-stomatology-webapi
+spec:
+  selector:
+    pod: id-stomatology-webapi-label
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: webapi-port
