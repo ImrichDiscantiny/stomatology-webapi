@@ -131,6 +131,15 @@ func (this *implStomatologyAppointmentListAPI) DeleteAppointmentListEntry(ctx *g
 			}, http.StatusNotFound
 		}
 
+		isNotOld := isNotOldDate(stomatology.AppointmentList[entryIndx].Date)
+
+		if isNotOld {
+			return nil, gin.H{
+				"status":  http.StatusBadRequest,
+				"message": "Cannot delete old appointments",
+			}, http.StatusBadRequest
+		}
+
 		stomatology.AppointmentList = append(stomatology.AppointmentList[:entryIndx], stomatology.AppointmentList[entryIndx+1:]...)
 		// stomatology.reconcileWaitingList()
 		return stomatology, nil, http.StatusNoContent
@@ -241,7 +250,7 @@ func (this *implStomatologyAppointmentListAPI) UpdateAppointmentListEntry(ctx *g
 		if isNotOld {
 			return nil, gin.H{
 				"status":  http.StatusBadRequest,
-				"message": "Cannot add old appointments",
+				"message": "Cannot update old appointments",
 			}, http.StatusBadRequest
 		}
 
