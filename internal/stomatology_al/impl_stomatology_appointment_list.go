@@ -250,7 +250,7 @@ func (this *implStomatologyAppointmentListAPI) UpdateAppointmentListEntry(ctx *g
 		if isNotOld {
 			return nil, gin.H{
 				"status":  http.StatusBadRequest,
-				"message": "Cannot update old appointments",
+				"message": "Cannot add old appointments",
 			}, http.StatusBadRequest
 		}
 
@@ -263,6 +263,15 @@ func (this *implStomatologyAppointmentListAPI) UpdateAppointmentListEntry(ctx *g
 				"status":  http.StatusNotFound,
 				"message": "Entry not found",
 			}, http.StatusNotFound
+		}
+
+		isNotOld = isNotOldDate(stomatology.AppointmentList[entryIndxIn].Date)
+
+		if isNotOld {
+			return nil, gin.H{
+				"status":  http.StatusBadRequest,
+				"message": "Cannot update old appointments",
+			}, http.StatusBadRequest
 		}
 
 		DateMatchIndx := slices.IndexFunc(stomatology.AppointmentList, func(appointment AppointmentListEntry) bool {
